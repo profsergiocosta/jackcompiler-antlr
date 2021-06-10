@@ -1,7 +1,7 @@
 grammar Jack;
 
 // Rules
-start: CLASS ID LBRACE classvardec RBRACE EOF;
+classdef: CLASS ID LBRACE classvardec* RBRACE EOF;
 
 classvardec: (STATIC | FIELD) ID SEMICOLON;
 

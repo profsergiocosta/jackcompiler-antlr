@@ -13,6 +13,7 @@ type JackListener struct {
 	*parser.BaseJackListener
 }
 
+
 func NewJackListener() *JackListener {
 	return new(JackListener)
 }
@@ -46,8 +47,8 @@ func main() {
 	// Create the Parser
 	p := parser.NewJackParser(stream)
 
-	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	p.BuildParseTrees = true
+	//p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	//p.BuildParseTrees = true
 
 	// Finally parse the expression
 
@@ -56,6 +57,7 @@ func main() {
 	//fmt.Println (tree.ToStringTree(p) )
 
 	antlr.ParseTreeWalkerDefault.Walk(NewJackListener(), tree)
+	
 
 	fmt.Println("Fim")
 	
