@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/profsergiocosta/ccompiler/token"
 	"github.com/profsergiocosta/jackcompiler-antlr/parser"
 	"github.com/profsergiocosta/jackcompiler-antlr/symboltable"
+	"github.com/profsergiocosta/jackcompiler-antlr/token"
 	"github.com/profsergiocosta/jackcompiler-antlr/vmwriter"
 )
 
@@ -94,6 +94,34 @@ func (s *JackListener) EnterTerm(ctx *parser.TermContext) {
 
 func (s *JackListener) EnterIntegerTerm(ctx *parser.IntegerTermContext) {
 	s.vm.WritePush(vmwriter.CONST, asInt(ctx.GetText()))
+}
+
+// ExitBinopterm is called when production binopterm is exited.
+func (s *JackListener) ExitBinopterm(ctx *parser.BinoptermContext) {
+	op := ctx.GetOperator().GetText() // não conseguir pegar pelo tipo de token
+
+	switch op {
+	case token.PLUS:
+		s.vm.WriteArithmetic(vmwriter.ADD)
+	case token.MINUS:
+		s.vm.WriteArithmetic(vmwriter.SUB)
+	case token.ASTERISK:
+		s.vm.WriteCall("Math.multiply", 2)
+	case token.SLASH:
+		s.vm.WriteCall("Math.divide", 2)
+	case token.AND:
+		s.vm.WriteArithmetic(vmwriter.AND)
+	case token.OR:
+		s.vm.WriteArithmetic(vmwriter.OR)
+	case token.LT:
+		s.vm.WriteArithmetic(vmwriter.LT)
+	case token.GT:
+		s.vm.WriteArithmetic(vmwriter.GT)
+	case token.EQ:
+		s.vm.WriteArithmetic(vmwriter.EQ)
+	case token.NOT:
+		s.vm.WriteArithmetic(vmwriter.NOT)
+	}
 }
 
 func filenameWithoutExtension(fn string) string {
