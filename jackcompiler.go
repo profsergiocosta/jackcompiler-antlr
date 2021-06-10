@@ -18,9 +18,7 @@ func NewJackListener() *JackListener {
 	return new(JackListener)
 }
 
-func (this *JackListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
-	//fmt.Println(ctx.GetText())
-}
+
 
 func main() {
 	// Setup the input
@@ -62,33 +60,18 @@ func main() {
 
 	// Create the Lexer
 	lexer := parser.NewJackLexer(is)
-/*
-		// Read all tokens
-		for {
-			t := lexer.NextToken()
-			if t.GetTokenType() == antlr.TokenEOF {
-				break
-			}
-			fmt.Printf("%s (%q)\n",
-				lexer.SymbolicNames[t.GetTokenType()], t.GetText())
-		}
-	*/
+
 	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+	
 	// Create the Parser
 	p := parser.NewJackParser(stream)
 
-	//p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
-	//p.BuildParseTrees = true
-
-	// Finally parse the expression
-
+	// generate AST
 	tree := p.Classdef()
 	
-	//fmt.Println (tree.ToStringTree(p) )
-
+	// visit tree
 	antlr.ParseTreeWalkerDefault.Walk(NewJackListener(), tree)
 	
-
-	fmt.Println("Fim")
+	fmt.Println("compiled")
 	
 }
