@@ -1,0 +1,1 @@
+antlr  -Dlanguage=Go -o parser Jack.g4 

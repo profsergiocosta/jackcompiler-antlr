@@ -26,21 +26,3 @@ func (s *BaseJackListener) EnterStart(ctx *StartContext) {}
 
 // ExitStart is called when production start is exited.
 func (s *BaseJackListener) ExitStart(ctx *StartContext) {}
-
-// EnterNumber is called when production Number is entered.
-func (s *BaseJackListener) EnterNumber(ctx *NumberContext) {}
-
-// ExitNumber is called when production Number is exited.
-func (s *BaseJackListener) ExitNumber(ctx *NumberContext) {}
-
-// EnterMulDiv is called when production MulDiv is entered.
-func (s *BaseJackListener) EnterMulDiv(ctx *MulDivContext) {}
-
-// ExitMulDiv is called when production MulDiv is exited.
-func (s *BaseJackListener) ExitMulDiv(ctx *MulDivContext) {}
-
-// EnterAddSub is called when production AddSub is entered.
-func (s *BaseJackListener) EnterAddSub(ctx *AddSubContext) {}
-
-// ExitAddSub is called when production AddSub is exited.
-func (s *BaseJackListener) ExitAddSub(ctx *AddSubContext) {}

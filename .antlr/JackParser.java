@@ -16,25 +16,40 @@ public class JackParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		MUL=1, DIV=2, ADD=3, SUB=4, NUMBER=5, WHITESPACE=6;
+		ID=1, STRING=2, INTEGER=3, ASSIGN=4, PLUS=5, MINUS=6, ASTERISK=7, SLASH=8, 
+		AND=9, OR=10, NOT=11, LT=12, GT=13, EQ=14, DOT=15, COMMA=16, SEMICOLON=17, 
+		LPAREN=18, RPAREN=19, LBRACE=20, RBRACE=21, LBRACKET=22, RBRACKET=23, 
+		METHOD=24, STATIC=25, INT=26, BOOLEAN=27, TRUE=28, NULL=29, LET=30, IF=31, 
+		WHILE=32, CONSTRUCTOR=33, FIELD=34, VAR=35, CHAR=36, VOID=37, CLASS=38, 
+		FALSE=39, DO=40, ELSE=41, RETURN=42, FUNCTION=43, THIS=44, WHITESPACE=45;
 	public static final int
-		RULE_start = 0, RULE_expression = 1;
+		RULE_start = 0;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"start", "expression"
+			"start"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'*'", "'/'", "'+'", "'-'"
+			null, null, null, null, "'='", "'+'", "'-'", "'*'", "'/'", "'&'", "'|'", 
+			"'~'", "'<'", "'>'", "'=='", "'.'", "','", "';'", "'('", "')'", "'{'", 
+			"'}'", "'['", "']'", "'METHOD'", "'STATIC'", "'INT'", "'BOOLEAN'", "'TRUE'", 
+			"'NULL'", "'LET'", "'IF'", "'WHILE'", "'CONSTRUCTOR'", "'FIELD'", "'VAR'", 
+			"'CHAR'", "'VOID'", "'CLASS'", "'FALSE'", "'DO'", "'ELSE'", "'RETURN'", 
+			"'FUNCTION'", "'THIS'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "MUL", "DIV", "ADD", "SUB", "NUMBER", "WHITESPACE"
+			null, "ID", "STRING", "INTEGER", "ASSIGN", "PLUS", "MINUS", "ASTERISK", 
+			"SLASH", "AND", "OR", "NOT", "LT", "GT", "EQ", "DOT", "COMMA", "SEMICOLON", 
+			"LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACKET", "RBRACKET", "METHOD", 
+			"STATIC", "INT", "BOOLEAN", "TRUE", "NULL", "LET", "IF", "WHILE", "CONSTRUCTOR", 
+			"FIELD", "VAR", "CHAR", "VOID", "CLASS", "FALSE", "DO", "ELSE", "RETURN", 
+			"FUNCTION", "THIS", "WHITESPACE"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -89,9 +104,8 @@ public class JackParser extends Parser {
 	}
 
 	public static class StartContext extends ParserRuleContext {
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
+		public TerminalNode INTEGER() { return getToken(JackParser.INTEGER, 0); }
+		public TerminalNode STRING() { return getToken(JackParser.STRING, 0); }
 		public TerminalNode EOF() { return getToken(JackParser.EOF, 0); }
 		public StartContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -103,12 +117,27 @@ public class JackParser extends Parser {
 		StartContext _localctx = new StartContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_start);
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(4);
-			expression(0);
 			setState(5);
-			match(EOF);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case INTEGER:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(2);
+				match(INTEGER);
+				}
+				break;
+			case STRING:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(3);
+				match(STRING);
+				setState(4);
+				match(EOF);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -122,169 +151,10 @@ public class JackParser extends Parser {
 		return _localctx;
 	}
 
-	public static class ExpressionContext extends ParserRuleContext {
-		public ExpressionContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_expression; }
-	 
-		public ExpressionContext() { }
-		public void copyFrom(ExpressionContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class NumberContext extends ExpressionContext {
-		public TerminalNode NUMBER() { return getToken(JackParser.NUMBER, 0); }
-		public NumberContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class MulDivContext extends ExpressionContext {
-		public Token op;
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public TerminalNode MUL() { return getToken(JackParser.MUL, 0); }
-		public TerminalNode DIV() { return getToken(JackParser.DIV, 0); }
-		public MulDivContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-	public static class AddSubContext extends ExpressionContext {
-		public Token op;
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
-		}
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public TerminalNode ADD() { return getToken(JackParser.ADD, 0); }
-		public TerminalNode SUB() { return getToken(JackParser.SUB, 0); }
-		public AddSubContext(ExpressionContext ctx) { copyFrom(ctx); }
-	}
-
-	public final ExpressionContext expression() throws RecognitionException {
-		return expression(0);
-	}
-
-	private ExpressionContext expression(int _p) throws RecognitionException {
-		ParserRuleContext _parentctx = _ctx;
-		int _parentState = getState();
-		ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState);
-		ExpressionContext _prevctx = _localctx;
-		int _startState = 2;
-		enterRecursionRule(_localctx, 2, RULE_expression, _p);
-		int _la;
-		try {
-			int _alt;
-			enterOuterAlt(_localctx, 1);
-			{
-			{
-			_localctx = new NumberContext(_localctx);
-			_ctx = _localctx;
-			_prevctx = _localctx;
-
-			setState(8);
-			match(NUMBER);
-			}
-			_ctx.stop = _input.LT(-1);
-			setState(18);
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					if ( _parseListeners!=null ) triggerExitRuleEvent();
-					_prevctx = _localctx;
-					{
-					setState(16);
-					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
-					case 1:
-						{
-						_localctx = new MulDivContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(10);
-						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(11);
-						((MulDivContext)_localctx).op = _input.LT(1);
-						_la = _input.LA(1);
-						if ( !(_la==MUL || _la==DIV) ) {
-							((MulDivContext)_localctx).op = (Token)_errHandler.recoverInline(this);
-						}
-						else {
-							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
-						setState(12);
-						expression(4);
-						}
-						break;
-					case 2:
-						{
-						_localctx = new AddSubContext(new ExpressionContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(13);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(14);
-						((AddSubContext)_localctx).op = _input.LT(1);
-						_la = _input.LA(1);
-						if ( !(_la==ADD || _la==SUB) ) {
-							((AddSubContext)_localctx).op = (Token)_errHandler.recoverInline(this);
-						}
-						else {
-							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
-						setState(15);
-						expression(3);
-						}
-						break;
-					}
-					} 
-				}
-				setState(20);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			unrollRecursionContexts(_parentctx);
-		}
-		return _localctx;
-	}
-
-	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
-		switch (ruleIndex) {
-		case 1:
-			return expression_sempred((ExpressionContext)_localctx, predIndex);
-		}
-		return true;
-	}
-	private boolean expression_sempred(ExpressionContext _localctx, int predIndex) {
-		switch (predIndex) {
-		case 0:
-			return precpred(_ctx, 3);
-		case 1:
-			return precpred(_ctx, 2);
-		}
-		return true;
-	}
-
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\b\30\4\2\t\2\4\3"+
-		"\t\3\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3\23\n\3\f\3\16"+
-		"\3\26\13\3\3\3\2\3\4\4\2\4\2\4\3\2\3\4\3\2\5\6\2\27\2\6\3\2\2\2\4\t\3"+
-		"\2\2\2\6\7\5\4\3\2\7\b\7\2\2\3\b\3\3\2\2\2\t\n\b\3\1\2\n\13\7\7\2\2\13"+
-		"\24\3\2\2\2\f\r\f\5\2\2\r\16\t\2\2\2\16\23\5\4\3\6\17\20\f\4\2\2\20\21"+
-		"\t\3\2\2\21\23\5\4\3\5\22\f\3\2\2\2\22\17\3\2\2\2\23\26\3\2\2\2\24\22"+
-		"\3\2\2\2\24\25\3\2\2\2\25\5\3\2\2\2\26\24\3\2\2\2\4\22\24";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3/\n\4\2\t\2\3\2\3"+
+		"\2\3\2\5\2\b\n\2\3\2\2\2\3\2\2\2\2\t\2\7\3\2\2\2\4\b\7\5\2\2\5\6\7\4\2"+
+		"\2\6\b\7\2\2\3\7\4\3\2\2\2\7\5\3\2\2\2\b\3\3\2\2\2\3\7";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
