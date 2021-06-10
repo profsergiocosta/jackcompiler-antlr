@@ -48,7 +48,9 @@ subroutinecall: ((classname | varname) DOT)? subroutinename LPAREN expressionlis
 
 expressionlist: (expression (COMMA expression)*)?;
 
-expression: term (binop term)*;
+expression: term binopterm*;
+
+binopterm: (operator = binop term);
 
 term:
 	INTEGER									# IntegerTerm
