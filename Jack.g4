@@ -9,12 +9,17 @@ classvardec:
 
 atype: (INT | CHAR | BOOLEAN | ID);
 
-subrotinedec: (CONSTRUCTOR | FUNCTION | METHOD) (VOID | atype) subroutinename LPAREN parameterList
+subrotinedec:
+	kind = (CONSTRUCTOR | FUNCTION | METHOD) subroutinetype subroutinename LPAREN parameterList
 		RPAREN subroutinebody;
+
+subroutinetype: (VOID | atype);
 
 parameterList: (atype varname (COMMA atype varname)*)?;
 
-subroutinebody: LBRACE vardec* statement* RBRACE;
+subroutinebody: LBRACE vardecs statement* RBRACE;
+
+vardecs: vardec*;
 
 vardec: VAR atype varname (COMMA varname)* SEMICOLON;
 
@@ -46,14 +51,14 @@ expressionlist: (expression (COMMA expression)*)?;
 expression: term (binop term)*;
 
 term:
-	INTEGER
-	| STRING
-	| keywordconstant
-	| varname
-	| varname LBRACKET expression RBRACKET
-	| subroutinecall
-	| LPAREN expression RPAREN
-	| unaryop term;
+	INTEGER									# IntegerTerm
+	| STRING								# StringTerm
+	| keywordconstant						# KeywordTerm
+	| varname								# VarnameTerm
+	| varname LBRACKET expression RBRACKET	# ArrayTerm
+	| subroutinecall						# SubroutineTerm
+	| LPAREN expression RPAREN				# ParsTerm
+	| unaryop term							# unaryopTerm;
 
 binop:
 	PLUS

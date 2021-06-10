@@ -1,8 +1,8 @@
 package listener
 
 import (
-	"fmt"
 	"path"
+	"strconv"
 	"strings"
 
 	"github.com/profsergiocosta/ccompiler/token"
@@ -17,6 +17,9 @@ type JackListener struct {
 	st *symboltable.SymbolTable
 
 	vm *vmwriter.VMWriter
+
+	className    string
+	functionName string
 }
 
 func New() *JackListener {
@@ -28,6 +31,10 @@ func New() *JackListener {
 	s.vm = vmwriter.New(filenameWithoutExtension(pathName) + ".vm")
 
 	return s
+}
+
+func (s *JackListener) EnterClassdef(ctx *parser.ClassdefContext) {
+	s.className = ctx.Classname().GetText()
 }
 
 func (s *JackListener) EnterClassvardec(ctx *parser.ClassvardecContext) {
@@ -45,7 +52,6 @@ func (s *JackListener) EnterClassvardec(ctx *parser.ClassvardecContext) {
 	varnames := ctx.AllVarname()
 	for _, element := range varnames {
 		s.st.Define(element.GetText(), ttype, scope)
-		fmt.Println(element.GetText(), ttype, scope)
 	}
 
 }
@@ -59,10 +65,65 @@ func (s *JackListener) EnterVardec(ctx *parser.VardecContext) {
 	varnames := ctx.AllVarname()
 	for _, element := range varnames {
 		s.st.Define(element.GetText(), ttype, scope)
-		fmt.Println(element.GetText(), ttype, scope)
 	}
+}
+
+func (s *JackListener) ExitVardecs(ctx *parser.VardecsContext) {
+	nLocals := s.st.VarCount(symboltable.VAR)
+	s.vm.WriteFunction(s.functionName, nLocals)
+}
+
+func (s *JackListener) EnterSubrotinedec(ctx *parser.SubrotinedecContext) {
+
+	if ctx.GetKind().GetTokenType() == parser.JackLexerMETHOD {
+		s.st.Define("this", s.className, symboltable.ARG)
+	}
+
+	s.functionName = s.className + "." + ctx.Subroutinename().GetText()
+}
+
+func (s *JackListener) ExitLetStatement(ctx *parser.LetStatementContext) {
+
+	sym := s.st.Resolve(ctx.Varname().GetText())
+	s.vm.WritePop(scopeToSegment(sym.Scope), sym.Index)
+}
+
+func (s *JackListener) EnterTerm(ctx *parser.TermContext) {
+
+}
+
+func (s *JackListener) EnterIntegerTerm(ctx *parser.IntegerTermContext) {
+	s.vm.WritePush(vmwriter.CONST, asInt(ctx.GetText()))
 }
 
 func filenameWithoutExtension(fn string) string {
 	return strings.TrimSuffix(fn, path.Ext(fn))
+}
+
+func asInt(s string) int {
+	i1, err := strconv.Atoi(s)
+	check(err)
+	return i1
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func scopeToSegment(scope symboltable.SymbolScope) vmwriter.Segment {
+	switch scope {
+	case symboltable.STATIC:
+		return vmwriter.STATIC
+	case symboltable.FIELD:
+		return vmwriter.THIS
+	case symboltable.VAR:
+		return vmwriter.LOCAL
+	case symboltable.ARG:
+		return vmwriter.ARG
+	default:
+
+	}
+	panic("scope undefined")
 }
