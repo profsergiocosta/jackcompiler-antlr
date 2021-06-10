@@ -1,15 +1,81 @@
 grammar Jack;
 
 // Rules
-classdef: CLASS ID LBRACE classvardec* RBRACE EOF;
+classdef:
+	CLASS classname LBRACE classvardec* subrotinedec* RBRACE EOF;
 
-classvardec: (STATIC | FIELD) typeannotation ID (COMMA ID)* SEMICOLON;
+classvardec: (STATIC | FIELD) atype varname (COMMA varname)* SEMICOLON;
 
-typeannotation: (INT | CHAR | BOOLEAN);
+atype: (INT | CHAR | BOOLEAN | ID);
+
+subrotinedec: (CONSTRUCTOR | FUNCTION | METHOD) (VOID | atype) subroutinename LPAREN parameterList
+		RPAREN subroutinebody;
+
+parameterList: (atype varname (COMMA atype varname)*)?;
+
+subroutinebody: LBRACE vardec* statement* RBRACE;
+
+vardec: VAR atype varname (COMMA varname)* SEMICOLON;
+
+statement:
+	letStatement
+	| ifStatement
+	| whileStatement
+	| doStatement
+	| returnStatement;
+
+letStatement:
+	LET varname (LBRACKET expression RBRACKET)? EQ expression SEMICOLON;
+ifStatement:
+	IF LPAREN expression RPAREN LBRACE statement* RBRACE (
+		(ELSE LBRACE statement* RBRACE)?
+	);
+
+whileStatement:
+	WHILE LPAREN expression RPAREN LBRACE statement* RBRACE;
+
+doStatement: DO subroutinecall SEMICOLON;
+
+returnStatement: RETURN expression? SEMICOLON;
+
+subroutinecall: ((classname | varname) DOT)? subroutinename LPAREN expressionlist RPAREN;
+
+expressionlist: (expression (COMMA expression)*)?;
+
+expression: term (binop term)*;
+
+term:
+	INTEGER
+	| STRING
+	| keywordconstant
+	| varname
+	| varname LBRACKET expression RBRACKET
+	| subroutinecall
+	| LPAREN expression RPAREN
+	| unaryop term;
+
+binop:
+	PLUS
+	| MINUS
+	| ASTERISK
+	| SLASH
+	| AND
+	| OR
+	| LT
+	| GT
+	| EQ;
+
+unaryop: MINUS | NOT;
+
+keywordconstant: TRUE | FALSE | NULL | THIS;
+
+classname: ID;
+varname: ID;
+subroutinename: ID;
+
 // Symbols
 
 // operators
-ASSIGN: '=';
 
 PLUS: '+';
 MINUS: '-';
@@ -20,7 +86,7 @@ OR: '|';
 NOT: '~';
 LT: '<';
 GT: '>';
-EQ: '==';
+EQ: '=';
 
 // Delimiters
 DOT: '.';
