@@ -6,17 +6,9 @@ import (
 
 	"github.com/profsergiocosta/jackcompiler-antlr/parser"
 
-	
+	"github.com/profsergiocosta/jackcompiler-antlr/listener"
 )
 
-type JackListener struct {
-	*parser.BaseJackListener
-}
-
-
-func NewJackListener() *JackListener {
-	return new(JackListener)
-}
 
 
 
