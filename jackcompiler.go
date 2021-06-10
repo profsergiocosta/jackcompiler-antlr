@@ -5,10 +5,20 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	"github.com/profsergiocosta/jackcompiler-antlr/parser"
+
+	
 )
 
-type jackListener struct {
+type JackListener struct {
 	*parser.BaseJackListener
+}
+
+func NewJackListener() *JackListener {
+	return new(JackListener)
+}
+
+func (this *JackListener) EnterEveryRule(ctx antlr.ParserRuleContext) {
+	//fmt.Println(ctx.GetText())
 }
 
 func main() {
@@ -36,8 +46,16 @@ func main() {
 	// Create the Parser
 	p := parser.NewJackParser(stream)
 
+	p.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+	p.BuildParseTrees = true
+
 	// Finally parse the expression
-	antlr.ParseTreeWalkerDefault.Walk(&jackListener{}, p.Start())
+
+	tree := p.Start()
+	
+	//fmt.Println (tree.ToStringTree(p) )
+
+	antlr.ParseTreeWalkerDefault.Walk(NewJackListener(), tree)
 
 	fmt.Println("Fim")
 	
