@@ -3,8 +3,9 @@ grammar Jack;
 // Rules
 classdef: CLASS ID LBRACE classvardec* RBRACE EOF;
 
-classvardec: (STATIC | FIELD) ID SEMICOLON;
+classvardec: (STATIC | FIELD) typeannotation ID (COMMA ID)* SEMICOLON;
 
+typeannotation: (INT | CHAR | BOOLEAN);
 // Symbols
 
 // operators

@@ -26,7 +26,8 @@ func main() {
 	// Setup the input
 	is := antlr.NewInputStream(`
 	class Main {
-		static a;
+		static int a, b;
+		field char x;
 	}
 				`)
 
@@ -52,7 +53,7 @@ func main() {
 
 	// Finally parse the expression
 
-	tree := p.Start()
+	tree := p.Classdef()
 	
 	//fmt.Println (tree.ToStringTree(p) )
 
