@@ -4,7 +4,8 @@ grammar Jack;
 classdef:
 	CLASS classname LBRACE classvardec* subrotinedec* RBRACE EOF;
 
-classvardec: (STATIC | FIELD) atype varname (COMMA varname)* SEMICOLON;
+classvardec:
+	kind = (STATIC | FIELD) atype varname (COMMA varname)* SEMICOLON;
 
 atype: (INT | CHAR | BOOLEAN | ID);
 

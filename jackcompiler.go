@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
 	"github.com/profsergiocosta/jackcompiler-antlr/parser"
@@ -9,14 +10,14 @@ import (
 	"github.com/profsergiocosta/jackcompiler-antlr/listener"
 )
 
-
-
-
 func main() {
 	// Setup the input
 	is := antlr.NewInputStream(
-	`
+		`
 	class Main {
+
+		field int x, y;
+
 		function void main() {
 			var Array a;
 			var int length;
@@ -54,16 +55,16 @@ func main() {
 	lexer := parser.NewJackLexer(is)
 
 	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
-	
+
 	// Create the Parser
 	p := parser.NewJackParser(stream)
 
 	// generate AST
 	tree := p.Classdef()
-	
+
 	// visit tree
-	antlr.ParseTreeWalkerDefault.Walk(NewJackListener(), tree)
-	
+	antlr.ParseTreeWalkerDefault.Walk(listener.New(), tree)
+
 	fmt.Println("compiled")
-	
+
 }
