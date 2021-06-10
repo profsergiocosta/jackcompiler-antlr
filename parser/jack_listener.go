@@ -11,6 +11,12 @@ type JackListener interface {
 	// EnterStart is called when entering the start production.
 	EnterStart(c *StartContext)
 
+	// EnterClassvardec is called when entering the classvardec production.
+	EnterClassvardec(c *ClassvardecContext)
+
 	// ExitStart is called when exiting the start production.
 	ExitStart(c *StartContext)
+
+	// ExitClassvardec is called when exiting the classvardec production.
+	ExitClassvardec(c *ClassvardecContext)
 }

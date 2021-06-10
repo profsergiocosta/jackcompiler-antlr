@@ -16,40 +16,40 @@ public class JackParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		ID=1, STRING=2, INTEGER=3, ASSIGN=4, PLUS=5, MINUS=6, ASTERISK=7, SLASH=8, 
-		AND=9, OR=10, NOT=11, LT=12, GT=13, EQ=14, DOT=15, COMMA=16, SEMICOLON=17, 
-		LPAREN=18, RPAREN=19, LBRACE=20, RBRACE=21, LBRACKET=22, RBRACKET=23, 
-		METHOD=24, STATIC=25, INT=26, BOOLEAN=27, TRUE=28, NULL=29, LET=30, IF=31, 
-		WHILE=32, CONSTRUCTOR=33, FIELD=34, VAR=35, CHAR=36, VOID=37, CLASS=38, 
-		FALSE=39, DO=40, ELSE=41, RETURN=42, FUNCTION=43, THIS=44, WHITESPACE=45;
+		ASSIGN=1, PLUS=2, MINUS=3, ASTERISK=4, SLASH=5, AND=6, OR=7, NOT=8, LT=9, 
+		GT=10, EQ=11, DOT=12, COMMA=13, SEMICOLON=14, LPAREN=15, RPAREN=16, LBRACE=17, 
+		RBRACE=18, LBRACKET=19, RBRACKET=20, METHOD=21, STATIC=22, INT=23, BOOLEAN=24, 
+		TRUE=25, NULL=26, LET=27, IF=28, WHILE=29, CONSTRUCTOR=30, FIELD=31, VAR=32, 
+		CHAR=33, VOID=34, CLASS=35, FALSE=36, DO=37, ELSE=38, RETURN=39, FUNCTION=40, 
+		THIS=41, ID=42, STRING=43, INTEGER=44, WHITESPACE=45;
 	public static final int
-		RULE_start = 0;
+		RULE_start = 0, RULE_classvardec = 1;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"start"
+			"start", "classvardec"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, null, "'='", "'+'", "'-'", "'*'", "'/'", "'&'", "'|'", 
-			"'~'", "'<'", "'>'", "'=='", "'.'", "','", "';'", "'('", "')'", "'{'", 
-			"'}'", "'['", "']'", "'METHOD'", "'STATIC'", "'INT'", "'BOOLEAN'", "'TRUE'", 
-			"'NULL'", "'LET'", "'IF'", "'WHILE'", "'CONSTRUCTOR'", "'FIELD'", "'VAR'", 
-			"'CHAR'", "'VOID'", "'CLASS'", "'FALSE'", "'DO'", "'ELSE'", "'RETURN'", 
-			"'FUNCTION'", "'THIS'"
+			null, "'='", "'+'", "'-'", "'*'", "'/'", "'&'", "'|'", "'~'", "'<'", 
+			"'>'", "'=='", "'.'", "','", "';'", "'('", "')'", "'{'", "'}'", "'['", 
+			"']'", "'method'", "'static'", "'int'", "'boolean'", "'true'", "'null'", 
+			"'let'", "'if'", "'while'", "'constructor'", "'field'", "'var'", "'char'", 
+			"'void'", "'class'", "'false'", "'do'", "'else'", "'return'", "'function'", 
+			"'this'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "ID", "STRING", "INTEGER", "ASSIGN", "PLUS", "MINUS", "ASTERISK", 
-			"SLASH", "AND", "OR", "NOT", "LT", "GT", "EQ", "DOT", "COMMA", "SEMICOLON", 
-			"LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACKET", "RBRACKET", "METHOD", 
-			"STATIC", "INT", "BOOLEAN", "TRUE", "NULL", "LET", "IF", "WHILE", "CONSTRUCTOR", 
-			"FIELD", "VAR", "CHAR", "VOID", "CLASS", "FALSE", "DO", "ELSE", "RETURN", 
-			"FUNCTION", "THIS", "WHITESPACE"
+			null, "ASSIGN", "PLUS", "MINUS", "ASTERISK", "SLASH", "AND", "OR", "NOT", 
+			"LT", "GT", "EQ", "DOT", "COMMA", "SEMICOLON", "LPAREN", "RPAREN", "LBRACE", 
+			"RBRACE", "LBRACKET", "RBRACKET", "METHOD", "STATIC", "INT", "BOOLEAN", 
+			"TRUE", "NULL", "LET", "IF", "WHILE", "CONSTRUCTOR", "FIELD", "VAR", 
+			"CHAR", "VOID", "CLASS", "FALSE", "DO", "ELSE", "RETURN", "FUNCTION", 
+			"THIS", "ID", "STRING", "INTEGER", "WHITESPACE"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -104,8 +104,13 @@ public class JackParser extends Parser {
 	}
 
 	public static class StartContext extends ParserRuleContext {
-		public TerminalNode INTEGER() { return getToken(JackParser.INTEGER, 0); }
-		public TerminalNode STRING() { return getToken(JackParser.STRING, 0); }
+		public TerminalNode CLASS() { return getToken(JackParser.CLASS, 0); }
+		public TerminalNode ID() { return getToken(JackParser.ID, 0); }
+		public TerminalNode LBRACE() { return getToken(JackParser.LBRACE, 0); }
+		public ClassvardecContext classvardec() {
+			return getRuleContext(ClassvardecContext.class,0);
+		}
+		public TerminalNode RBRACE() { return getToken(JackParser.RBRACE, 0); }
 		public TerminalNode EOF() { return getToken(JackParser.EOF, 0); }
 		public StartContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -117,27 +122,65 @@ public class JackParser extends Parser {
 		StartContext _localctx = new StartContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_start);
 		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(4);
+			match(CLASS);
 			setState(5);
-			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case INTEGER:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(2);
-				match(INTEGER);
-				}
-				break;
-			case STRING:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(3);
-				match(STRING);
-				setState(4);
-				match(EOF);
-				}
-				break;
-			default:
-				throw new NoViableAltException(this);
+			match(ID);
+			setState(6);
+			match(LBRACE);
+			setState(7);
+			classvardec();
+			setState(8);
+			match(RBRACE);
+			setState(9);
+			match(EOF);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class ClassvardecContext extends ParserRuleContext {
+		public TerminalNode ID() { return getToken(JackParser.ID, 0); }
+		public TerminalNode SEMICOLON() { return getToken(JackParser.SEMICOLON, 0); }
+		public TerminalNode STATIC() { return getToken(JackParser.STATIC, 0); }
+		public TerminalNode FIELD() { return getToken(JackParser.FIELD, 0); }
+		public ClassvardecContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_classvardec; }
+	}
+
+	public final ClassvardecContext classvardec() throws RecognitionException {
+		ClassvardecContext _localctx = new ClassvardecContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_classvardec);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(11);
+			_la = _input.LA(1);
+			if ( !(_la==STATIC || _la==FIELD) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			setState(12);
+			match(ID);
+			setState(13);
+			match(SEMICOLON);
 			}
 		}
 		catch (RecognitionException re) {
@@ -152,9 +195,11 @@ public class JackParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3/\n\4\2\t\2\3\2\3"+
-		"\2\3\2\5\2\b\n\2\3\2\2\2\3\2\2\2\2\t\2\7\3\2\2\2\4\b\7\5\2\2\5\6\7\4\2"+
-		"\2\6\b\7\2\2\3\7\4\3\2\2\2\7\5\3\2\2\2\b\3\3\2\2\2\3\7";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3/\22\4\2\t\2\4\3\t"+
+		"\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\2\2\4\2\4\2\3\4\2\30"+
+		"\30!!\2\17\2\6\3\2\2\2\4\r\3\2\2\2\6\7\7%\2\2\7\b\7,\2\2\b\t\7\23\2\2"+
+		"\t\n\5\4\3\2\n\13\7\24\2\2\13\f\7\2\2\3\f\3\3\2\2\2\r\16\t\2\2\2\16\17"+
+		"\7,\2\2\17\20\7\20\2\2\20\5\3\2\2\2\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

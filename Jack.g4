@@ -1,13 +1,9 @@
 grammar Jack;
 
 // Rules
-start: INTEGER | STRING EOF;
+start: CLASS ID LBRACE classvardec RBRACE EOF;
 
-ID: ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9])*;
-
-STRING: '"' .*? '"';
-
-INTEGER: [0-9]+;
+classvardec: (STATIC | FIELD) ID SEMICOLON;
 
 // Symbols
 
@@ -37,26 +33,32 @@ LBRACKET: '[';
 RBRACKET: ']';
 
 // Keywords
-METHOD: 'METHOD';
-STATIC: 'STATIC';
-INT: 'INT';
-BOOLEAN: 'BOOLEAN';
-TRUE: 'TRUE';
-NULL: 'NULL';
-LET: 'LET';
-IF: 'IF';
-WHILE: 'WHILE';
-CONSTRUCTOR: 'CONSTRUCTOR';
-FIELD: 'FIELD';
-VAR: 'VAR';
-CHAR: 'CHAR';
-VOID: 'VOID';
-CLASS: 'CLASS';
-FALSE: 'FALSE';
-DO: 'DO';
-ELSE: 'ELSE';
-RETURN: 'RETURN';
-FUNCTION: 'FUNCTION';
-THIS: 'THIS';
+METHOD: 'method';
+STATIC: 'static';
+INT: 'int';
+BOOLEAN: 'boolean';
+TRUE: 'true';
+NULL: 'null';
+LET: 'let';
+IF: 'if';
+WHILE: 'while';
+CONSTRUCTOR: 'constructor';
+FIELD: 'field';
+VAR: 'var';
+CHAR: 'char';
+VOID: 'void';
+CLASS: 'class';
+FALSE: 'false';
+DO: 'do';
+ELSE: 'else';
+RETURN: 'return';
+FUNCTION: 'function';
+THIS: 'this';
+
+ID: ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9])*;
+
+STRING: '"' .*? '"';
+
+INTEGER: [0-9]+;
 
 WHITESPACE: [ \r\n\t]+ -> skip;

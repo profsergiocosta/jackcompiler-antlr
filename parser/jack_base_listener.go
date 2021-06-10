@@ -26,3 +26,9 @@ func (s *BaseJackListener) EnterStart(ctx *StartContext) {}
 
 // ExitStart is called when production start is exited.
 func (s *BaseJackListener) ExitStart(ctx *StartContext) {}
+
+// EnterClassvardec is called when production classvardec is entered.
+func (s *BaseJackListener) EnterClassvardec(ctx *ClassvardecContext) {}
+
+// ExitClassvardec is called when production classvardec is exited.
+func (s *BaseJackListener) ExitClassvardec(ctx *ClassvardecContext) {}
