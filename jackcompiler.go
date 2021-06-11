@@ -19,15 +19,20 @@ func main() {
 		
 		function void main() {
 			var int a, b  ,c ;
+			let a[10] = 42;
 
-
-			let a = 10 + 50 * 60 - 80;
-
-			let b = false;
-			let c = "ola";
+		
 		
 
-			return ;
+			return 10;
+		}
+
+		function void x() {
+			var int a, b  ,c ;
+			let a[10] = 42;
+
+		
+			return 10;
 		}
 	}
 	

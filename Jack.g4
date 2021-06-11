@@ -30,8 +30,11 @@ statement:
 	| doStatement
 	| returnStatement;
 
-letStatement:
-	LET varname (LBRACKET expression RBRACKET)? EQ expression SEMICOLON;
+letStatement: LET lvalue EQ rvalue SEMICOLON;
+
+lvalue: ident = varname (LBRACKET expression RBRACKET)?;
+rvalue: expression;
+
 ifStatement:
 	IF LPAREN expression RPAREN LBRACE statement* RBRACE (
 		(ELSE LBRACE statement* RBRACE)?
@@ -69,23 +72,10 @@ term:
 	| STRING										# StringTerm
 	| keywordConst = (TRUE | FALSE | NULL | THIS)	# KeywordTerm
 	| varname										# VarnameTerm
-	| varname LBRACKET expression RBRACKET			# ArrayTerm
+	| ident = varname LBRACKET expression RBRACKET	# ArrayTerm
 	| subroutinecall								# SubroutineTerm
 	| LPAREN expression RPAREN						# ParsTerm
-	| unaryop term									# unaryopTerm;
-
-binop:
-	PLUS
-	| MINUS
-	| ASTERISK
-	| SLASH
-	| AND
-	| OR
-	| LT
-	| GT
-	| EQ;
-
-unaryop: MINUS | NOT;
+	| unaryop = (MINUS | NOT) term					# unaryopTerm;
 
 classname: ID;
 varname: ID;

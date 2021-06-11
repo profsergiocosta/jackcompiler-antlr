@@ -1,6 +1,7 @@
 package listener
 
 import (
+	"fmt"
 	"path"
 	"strconv"
 	"strings"
@@ -81,10 +82,35 @@ func (s *JackListener) EnterSubrotinedec(ctx *parser.SubrotinedecContext) {
 	s.functionName = s.className + "." + ctx.Subroutinename().GetText()
 }
 
-func (s *JackListener) ExitLetStatement(ctx *parser.LetStatementContext) {
+// ExitLvalue is called when production lvalue is exited.
+func (s *JackListener) ExitLvalue(ctx *parser.LvalueContext) {
+	sym := s.st.Resolve(ctx.GetIdent().GetText())
+	if ctx.LBRACKET() != nil {
+		s.vm.WritePush(scopeToSegment(sym.Scope), sym.Index)
+		s.vm.WriteArithmetic(vmwriter.ADD)
+	}
+}
 
-	sym := s.st.Resolve(ctx.Varname().GetText())
-	s.vm.WritePop(scopeToSegment(sym.Scope), sym.Index)
+func (s *JackListener) ExitLetStatement(ctx *parser.LetStatementContext) {
+	sym := s.st.Resolve(ctx.Lvalue().GetIdent().GetText())
+	if ctx.Lvalue().GetChildCount() > 1 { // is array ?
+		s.vm.WritePop(vmwriter.TEMP, 0)
+		s.vm.WritePop(vmwriter.POINTER, 1)
+		s.vm.WritePush(vmwriter.TEMP, 0)
+		s.vm.WritePop(vmwriter.THAT, 0)
+	} else {
+		s.vm.WritePop(scopeToSegment(sym.Scope), sym.Index)
+	}
+
+}
+
+func (s *JackListener) ExitReturnStatement(ctx *parser.ReturnStatementContext) {
+	if ctx.GetChildCount() > 2 { // has expression ?
+		s.vm.WriteReturn()
+	} else {
+		s.vm.WritePush(vmwriter.CONST, 0)
+		s.vm.WriteReturn()
+	}
 }
 
 func (s *JackListener) EnterTerm(ctx *parser.TermContext) {
@@ -121,6 +147,39 @@ func (s *JackListener) EnterStringTerm(ctx *parser.StringTermContext) {
 	for i := 0; i < len(str); i++ {
 		s.vm.WritePush(vmwriter.CONST, int(str[i]))
 		s.vm.WriteCall("String.appendChar", 2)
+	}
+}
+
+// EnterVarnameTerm is called when production VarnameTerm is entered.
+func (s *JackListener) EnterVarnameTerm(ctx *parser.VarnameTermContext) {
+	varname := ctx.GetText()
+	sym := s.st.Resolve(varname)
+	s.vm.WritePush(scopeToSegment(sym.Scope), sym.Index)
+}
+
+func (s *JackListener) ExitArrayTerm(ctx *parser.ArrayTermContext) {
+
+	varname := ctx.GetIdent().GetText()
+	fmt.Println("v=", varname)
+
+	sym := s.st.Resolve(varname)
+
+	s.vm.WritePush(scopeToSegment(sym.Scope), sym.Index)
+	s.vm.WriteArithmetic(vmwriter.ADD)
+
+	s.vm.WritePop(vmwriter.POINTER, 1)
+	s.vm.WritePush(vmwriter.THAT, 0)
+
+}
+
+// ExitUnaryopTerm is called when production unaryopTerm is exited.
+func (s *JackListener) ExitUnaryopTerm(ctx *parser.UnaryopTermContext) {
+	switch ctx.GetUnaryop().GetTokenType() {
+	case parser.JackLexerMINUS:
+		s.vm.WriteArithmetic(vmwriter.NEG)
+	default:
+		s.vm.WriteArithmetic(vmwriter.NOT)
+
 	}
 }
 
