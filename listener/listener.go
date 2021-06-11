@@ -7,7 +7,6 @@ import (
 
 	"github.com/profsergiocosta/jackcompiler-antlr/parser"
 	"github.com/profsergiocosta/jackcompiler-antlr/symboltable"
-	"github.com/profsergiocosta/jackcompiler-antlr/token"
 	"github.com/profsergiocosta/jackcompiler-antlr/vmwriter"
 )
 
@@ -41,10 +40,10 @@ func (s *JackListener) EnterClassvardec(ctx *parser.ClassvardecContext) {
 
 	var scope symboltable.SymbolScope
 
-	scope = token.STATIC
+	scope = symboltable.STATIC
 
 	if ctx.GetKind().GetTokenType() == parser.JackLexerFIELD {
-		scope = token.FIELD
+		scope = symboltable.FIELD
 	}
 
 	ttype := ctx.Atype().GetText()
@@ -96,32 +95,60 @@ func (s *JackListener) EnterIntegerTerm(ctx *parser.IntegerTermContext) {
 	s.vm.WritePush(vmwriter.CONST, asInt(ctx.GetText()))
 }
 
-// ExitBinopterm is called when production binopterm is exited.
-func (s *JackListener) ExitBinopterm(ctx *parser.BinoptermContext) {
-	op := ctx.GetOperator().GetText() // não conseguir pegar pelo tipo de token
+// EnterKeywordTerm is called when production KeywordTerm is entered.
+func (s *JackListener) EnterKeywordTerm(ctx *parser.KeywordTermContext) {
+	switch ctx.GetKeywordConst().GetTokenType() {
 
-	switch op {
-	case token.PLUS:
+	case parser.JackLexerTRUE:
+		s.vm.WritePush(vmwriter.CONST, 0)
+		s.vm.WriteArithmetic(vmwriter.NOT)
+
+	case parser.JackLexerFALSE, parser.JackLexerNULL:
+		s.vm.WritePush(vmwriter.CONST, 0)
+
+	case parser.JackLexerTHIS:
+		s.vm.WritePush(vmwriter.POINTER, 0)
+
+	}
+
+}
+
+// EnterStringTerm is called when production StringTerm is entered.
+func (s *JackListener) EnterStringTerm(ctx *parser.StringTermContext) {
+	str := ctx.GetText()
+	s.vm.WritePush(vmwriter.CONST, len(str))
+	s.vm.WriteCall("String.new", 1)
+	for i := 0; i < len(str); i++ {
+		s.vm.WritePush(vmwriter.CONST, int(str[i]))
+		s.vm.WriteCall("String.appendChar", 2)
+	}
+}
+
+func (s *JackListener) ExitBinaryoperation(ctx *parser.BinaryoperationContext) {
+	switch ctx.GetOperator().GetTokenType() {
+
+	case parser.JackLexerPLUS:
 		s.vm.WriteArithmetic(vmwriter.ADD)
-	case token.MINUS:
+	case parser.JackLexerMINUS:
 		s.vm.WriteArithmetic(vmwriter.SUB)
-	case token.ASTERISK:
+	case parser.JackLexerASTERISK:
 		s.vm.WriteCall("Math.multiply", 2)
-	case token.SLASH:
+	case parser.JackLexerSLASH:
 		s.vm.WriteCall("Math.divide", 2)
-	case token.AND:
+	case parser.JackLexerAND:
 		s.vm.WriteArithmetic(vmwriter.AND)
-	case token.OR:
+	case parser.JackLexerOR:
 		s.vm.WriteArithmetic(vmwriter.OR)
-	case token.LT:
+	case parser.JackLexerLT:
 		s.vm.WriteArithmetic(vmwriter.LT)
-	case token.GT:
+	case parser.JackLexerGT:
 		s.vm.WriteArithmetic(vmwriter.GT)
-	case token.EQ:
+	case parser.JackLexerEQ:
 		s.vm.WriteArithmetic(vmwriter.EQ)
-	case token.NOT:
+	case parser.JackLexerNOT:
 		s.vm.WriteArithmetic(vmwriter.NOT)
 	}
+
 }
 
 func filenameWithoutExtension(fn string) string {

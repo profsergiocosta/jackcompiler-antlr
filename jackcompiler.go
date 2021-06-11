@@ -22,6 +22,9 @@ func main() {
 
 
 			let a = 10 + 50 * 60 - 80;
+
+			let b = false;
+			let c = "ola";
 		
 
 			return ;

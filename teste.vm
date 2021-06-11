@@ -7,5 +7,18 @@ call Math.multiply 2
 push constant 80
 sub
 pop local 0
-
-
+push constant 0
+pop local 1
+push constant 5
+call String.new 1
+push constant 34
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 108
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 34
+call String.appendChar 2
+pop local 2

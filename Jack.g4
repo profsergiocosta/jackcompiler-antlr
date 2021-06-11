@@ -48,19 +48,31 @@ subroutinecall: ((classname | varname) DOT)? subroutinename LPAREN expressionlis
 
 expressionlist: (expression (COMMA expression)*)?;
 
-expression: term binopterm*;
+expression: term binaryoperation*;
 
-binopterm: (operator = binop term);
+binaryoperation: (
+		operator = (
+			PLUS
+			| MINUS
+			| ASTERISK
+			| SLASH
+			| AND
+			| OR
+			| LT
+			| GT
+			| EQ
+		) term
+	);
 
 term:
-	INTEGER									# IntegerTerm
-	| STRING								# StringTerm
-	| keywordconstant						# KeywordTerm
-	| varname								# VarnameTerm
-	| varname LBRACKET expression RBRACKET	# ArrayTerm
-	| subroutinecall						# SubroutineTerm
-	| LPAREN expression RPAREN				# ParsTerm
-	| unaryop term							# unaryopTerm;
+	INTEGER											# IntegerTerm
+	| STRING										# StringTerm
+	| keywordConst = (TRUE | FALSE | NULL | THIS)	# KeywordTerm
+	| varname										# VarnameTerm
+	| varname LBRACKET expression RBRACKET			# ArrayTerm
+	| subroutinecall								# SubroutineTerm
+	| LPAREN expression RPAREN						# ParsTerm
+	| unaryop term									# unaryopTerm;
 
 binop:
 	PLUS
@@ -74,8 +86,6 @@ binop:
 	| EQ;
 
 unaryop: MINUS | NOT;
-
-keywordconstant: TRUE | FALSE | NULL | THIS;
 
 classname: ID;
 varname: ID;
