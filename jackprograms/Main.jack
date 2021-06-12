@@ -1,7 +1,11 @@
 	class Main {
 
 		function void main(int x) {
-            do Output.printInt(10);
+            var int a;
+			while (a < 10) {
+				let a = a + 1;
+			}
+
 			return ;
 		}
 

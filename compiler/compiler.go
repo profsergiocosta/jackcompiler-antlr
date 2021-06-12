@@ -1,7 +1,6 @@
 package compiler
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path"
 	"strings"
@@ -43,7 +42,5 @@ func Compile(pathName string) {
 	vmfilename := filenameWithoutExtension(pathName) + ".vm"
 	// visit tree
 	antlr.ParseTreeWalkerDefault.Walk(listener.New(vmfilename), tree)
-
-	fmt.Println("compiled")
 
 }

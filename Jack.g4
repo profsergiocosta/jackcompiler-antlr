@@ -37,13 +37,15 @@ letStatement: LET lvalue EQ rvalue SEMICOLON;
 lvalue: ident = varname (LBRACKET expression RBRACKET)?;
 rvalue: expression;
 
-ifStatement:
-	IF LPAREN expression RPAREN LBRACE statement* RBRACE (
-		(ELSE LBRACE statement* RBRACE)?
-	);
+ifStatement: IF LPAREN expression ifBlock ( (elseBlock)?);
 
-whileStatement:
-	WHILE LPAREN expression RPAREN LBRACE statement* RBRACE;
+ifBlock: RPAREN LBRACE statement* RBRACE;
+
+elseBlock: ELSE LBRACE statement* RBRACE;
+
+whileStatement: WHILE LPAREN expression whileBlock;
+
+whileBlock: RPAREN LBRACE statement* RBRACE;
 
 doStatement: DO subroutinecall SEMICOLON;
 
