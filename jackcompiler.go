@@ -17,21 +17,14 @@ func main() {
 	class Main {
 
 		
-		method void main(int x) {
+		function void main(int x) {
 			var int a, b  ,c ;
-			let a[10] = 42;
-			let c = x;
-
+			let c = f(10, 20*4);
 		
-		
-
-			return 10;
+			return ;
 		}
 
 		function void x() {
-			var int a, b  ,c ;
-			let a[10] = 42;
-
 		
 		}
 	}

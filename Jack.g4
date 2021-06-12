@@ -49,7 +49,9 @@ doStatement: DO subroutinecall SEMICOLON;
 
 returnStatement: RETURN expression? SEMICOLON;
 
-subroutinecall: ((classname | varname) DOT)? subroutinename LPAREN expressionlist RPAREN;
+subroutinecall: (classObject)? subroutinename LPAREN expressionlist RPAREN;
+
+classObject: (classname | varname) DOT;
 
 expressionlist: (expression (COMMA expression)*)?;
 
@@ -79,7 +81,7 @@ term:
 	| LPAREN expression RPAREN						# ParsTerm
 	| unaryop = (MINUS | NOT) term					# unaryopTerm;
 
-classname: ID;
+classname: CLASSNAME;
 varname: ID;
 subroutinename: ID;
 
@@ -131,6 +133,8 @@ ELSE: 'else';
 RETURN: 'return';
 FUNCTION: 'function';
 THIS: 'this';
+
+CLASSNAME: ([A-Z]) ([a-z] | [A-Z] | [0-9])*; // token adicionado, para facilitar o gerador de codigo
 
 ID: ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9])*;
 

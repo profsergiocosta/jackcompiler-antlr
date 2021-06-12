@@ -18,10 +18,14 @@ type JackListener struct {
 
 	vm *vmwriter.VMWriter
 
+	//context
 	className    string
 	functionName string
 
+	// call
 	subroutineKind int
+	numargs        int
+	subroutineName string
 }
 
 func New() *JackListener {
@@ -190,8 +194,39 @@ func (s *JackListener) ExitArrayTerm(ctx *parser.ArrayTermContext) {
 
 }
 
+func (s *JackListener) EnterSubroutinecall(ctx *parser.SubroutinecallContext) {
+	s.numargs = 0
+	s.subroutineName = ""
+	if ctx.ClassObject() == nil { // é o metod da propria classe
+		s.vm.WritePush(vmwriter.POINTER, 0)
+	}
+}
+
+func (s *JackListener) ExitSubroutinecall(ctx *parser.SubroutinecallContext) {
+	subName := s.subroutineName + ctx.Subroutinename().GetText()
+	s.vm.WriteCall(subName, s.numargs)
+
+}
+
+// EnterClassObject is called when production classObject is entered.
+func (s *JackListener) EnterClassObject(ctx *parser.ClassObjectContext) {
+	if ctx.Classname() == nil { // é um objeto
+		sym, _ := s.st.Lookup(ctx.Varname().GetText())
+		s.vm.WritePush(scopeToSegment(sym.Scope), sym.Index)
+		s.numargs = 1
+	} else {
+		s.subroutineName = ctx.Classname().GetText() + "."
+	}
+}
+
+// EnterExpressionlist is called when production expressionlist is entered.
+func (s *JackListener) EnterExpressionlist(ctx *parser.ExpressionlistContext) {
+	s.numargs += len(ctx.AllExpression())
+}
+
 // ExitUnaryopTerm is called when production unaryopTerm is exited.
 func (s *JackListener) ExitUnaryopTerm(ctx *parser.UnaryopTermContext) {
+
 	switch ctx.GetUnaryop().GetTokenType() {
 	case parser.JackLexerMINUS:
 		s.vm.WriteArithmetic(vmwriter.NEG)

@@ -1,24 +1,11 @@
 function Main.main 3
-push argument 0
-pop pointer 0
+push pointer 0
 push constant 10
-push local 0
-add
-push constant 42
-pop temp 0
-pop pointer 1
-push temp 0
-pop that 0
-push argument 0
+push constant 20
+push constant 4
+call Math.multiply 2
+call f 2
 pop local 2
-push constant 10
+push constant 0
 return
-function Main.x 6
-push constant 10
-push local 3
-add
-push constant 42
-pop temp 0
-pop pointer 1
-push temp 0
-pop that 0
+function Main.x 3
