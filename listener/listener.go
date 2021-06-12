@@ -20,6 +20,8 @@ type JackListener struct {
 
 	className    string
 	functionName string
+
+	subroutineKind int
 }
 
 func New() *JackListener {
@@ -78,15 +80,24 @@ func (s *JackListener) EnterParameter(ctx *parser.ParameterContext) {
 func (s *JackListener) ExitVardecs(ctx *parser.VardecsContext) {
 	nLocals := s.st.VarCount(symboltable.VAR)
 	s.vm.WriteFunction(s.functionName, nLocals)
+
+	switch s.subroutineKind {
+	case parser.JackLexerMETHOD:
+		s.st.Define("this", s.className, symboltable.ARG)
+		s.vm.WritePush(vmwriter.ARG, 0)
+		s.vm.WritePop(vmwriter.POINTER, 0)
+	case parser.JackLexerCONSTRUCTOR:
+		s.vm.WritePush(vmwriter.CONST, s.st.VarCount(symboltable.FIELD))
+		s.vm.WriteCall("Memory.alloc", 1)
+		s.vm.WritePop(vmwriter.POINTER, 0)
+	}
+
 }
 
 func (s *JackListener) EnterSubrotinedec(ctx *parser.SubrotinedecContext) {
 
-	if ctx.GetKind().GetTokenType() == parser.JackLexerMETHOD {
-		s.st.Define("this", s.className, symboltable.ARG)
-	}
-
 	s.functionName = s.className + "." + ctx.Subroutinename().GetText()
+	s.subroutineKind = ctx.GetKind().GetTokenType()
 }
 
 // ExitLvalue is called when production lvalue is exited.

@@ -17,7 +17,7 @@ func main() {
 	class Main {
 
 		
-		function void main(int x) {
+		method void main(int x) {
 			var int a, b  ,c ;
 			let a[10] = 42;
 			let c = x;
