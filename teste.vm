@@ -1,11 +1,11 @@
-function Main.main 3
-push pointer 0
-push constant 10
-push constant 20
-push constant 4
-call Math.multiply 2
-call f 2
-pop local 2
+function Main.f1 0
 push constant 0
 return
-function Main.x 3
+function Main.main 4
+call Main.f1 0
+pop local 2
+push local 0
+call Point.getX 1
+pop local 1
+push constant 0
+return

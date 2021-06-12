@@ -214,6 +214,7 @@ func (s *JackListener) EnterClassObject(ctx *parser.ClassObjectContext) {
 		sym, _ := s.st.Lookup(ctx.Varname().GetText())
 		s.vm.WritePush(scopeToSegment(sym.Scope), sym.Index)
 		s.numargs = 1
+		s.subroutineName = sym.Type + "."
 	} else {
 		s.subroutineName = ctx.Classname().GetText() + "."
 	}

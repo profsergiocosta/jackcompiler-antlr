@@ -7,7 +7,7 @@ classdef:
 classvardec:
 	kind = (STATIC | FIELD) atype varname (COMMA varname)* SEMICOLON;
 
-atype: (INT | CHAR | BOOLEAN | ID);
+atype: (INT | CHAR | BOOLEAN | CLASSNAME);
 
 subrotinedec:
 	kind = (CONSTRUCTOR | FUNCTION | METHOD) subroutinetype subroutinename LPAREN parameterList
