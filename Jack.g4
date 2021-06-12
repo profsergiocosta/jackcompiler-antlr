@@ -144,4 +144,7 @@ STRING: '"' .*? '"';
 
 INTEGER: [0-9]+;
 
+COMMENT: '/*' .*? '*/' -> skip;
+LINE_COMMENT: '//' ~[\r\n]* -> skip;
+
 WHITESPACE: [ \r\n\t]+ -> skip;

@@ -109,6 +109,8 @@ func (s *JackListener) EnterSubrotinedec(ctx *parser.SubrotinedecContext) {
 
 	s.ifLabelNum = 0
 	s.whileLabelNum = 0
+
+	s.st.StartSubroutine()
 }
 
 // ExitLvalue is called when production lvalue is exited.
@@ -233,6 +235,7 @@ func (s *JackListener) EnterKeywordTerm(ctx *parser.KeywordTermContext) {
 // EnterStringTerm is called when production StringTerm is entered.
 func (s *JackListener) EnterStringTerm(ctx *parser.StringTermContext) {
 	str := ctx.GetText()
+	str = str[1 : len(str)-1]
 	s.vm.WritePush(vmwriter.CONST, len(str))
 	s.vm.WriteCall("String.new", 1)
 	for i := 0; i < len(str); i++ {
@@ -251,7 +254,6 @@ func (s *JackListener) EnterVarnameTerm(ctx *parser.VarnameTermContext) {
 func (s *JackListener) ExitArrayTerm(ctx *parser.ArrayTermContext) {
 
 	varname := ctx.GetIdent().GetText()
-	fmt.Println("v=", varname)
 
 	sym := s.st.Resolve(varname)
 
