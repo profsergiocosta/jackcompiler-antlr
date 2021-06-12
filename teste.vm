@@ -7,6 +7,8 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
+push argument 0
+pop local 2
 push constant 10
 return
 function Main.x 6
@@ -18,5 +20,3 @@ pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
-push constant 10
-return

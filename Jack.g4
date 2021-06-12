@@ -15,7 +15,9 @@ subrotinedec:
 
 subroutinetype: (VOID | atype);
 
-parameterList: (atype varname (COMMA atype varname)*)?;
+parameterList: ( parameter (COMMA parameter)*)?;
+
+parameter: atype varname;
 
 subroutinebody: LBRACE vardecs statement* RBRACE;
 

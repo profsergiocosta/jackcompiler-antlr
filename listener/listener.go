@@ -68,6 +68,13 @@ func (s *JackListener) EnterVardec(ctx *parser.VardecContext) {
 	}
 }
 
+func (s *JackListener) EnterParameter(ctx *parser.ParameterContext) {
+	var scope symboltable.SymbolScope = symboltable.ARG
+	ttype := ctx.Atype().GetText()
+	name := ctx.Varname().GetText()
+	s.st.Define(name, ttype, scope)
+}
+
 func (s *JackListener) ExitVardecs(ctx *parser.VardecsContext) {
 	nLocals := s.st.VarCount(symboltable.VAR)
 	s.vm.WriteFunction(s.functionName, nLocals)

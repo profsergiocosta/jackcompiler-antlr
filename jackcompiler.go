@@ -17,9 +17,10 @@ func main() {
 	class Main {
 
 		
-		function void main() {
+		function void main(int x) {
 			var int a, b  ,c ;
 			let a[10] = 42;
+			let c = x;
 
 		
 		
@@ -32,7 +33,6 @@ func main() {
 			let a[10] = 42;
 
 		
-			return 10;
 		}
 	}
 	
