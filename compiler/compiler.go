@@ -1,4 +1,4 @@
-package main
+package compiler
 
 import (
 	"fmt"
@@ -10,29 +10,10 @@ import (
 	"github.com/profsergiocosta/jackcompiler-antlr/listener"
 )
 
-func main() {
+func compile(s string) {
+
 	// Setup the input
-	is := antlr.NewInputStream(
-		`
-	class Main {
-
-		function void f1() {
-			return;
-		}
-
-		function void main(int x) {
-			var Point p;
-			var int a, b  ,c ;
-			let b = Main.f1();
-			let a = p.getX();
-			return ;
-		}
-
-		
-	}
-	
-	
-	`)
+	is := antlr.NewInputStream(s)
 
 	// Create the Lexer
 	lexer := parser.NewJackLexer(is)
