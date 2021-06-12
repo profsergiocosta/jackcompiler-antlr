@@ -288,6 +288,7 @@ func (s *JackListener) EnterSubroutinecall(ctx *parser.SubroutinecallContext) {
 	if ctx.ClassObject() == nil { // é o metod da propria classe
 		s.subroutineName = s.className + "."
 		s.vm.WritePush(vmwriter.POINTER, 0)
+		s.numargs = 1
 	}
 }
 
