@@ -7,7 +7,7 @@ classdef:
 classvardec:
 	kind = (STATIC | FIELD) atype varname (COMMA varname)* SEMICOLON;
 
-atype: (INT | CHAR | BOOLEAN | CLASSNAME);
+atype: (INT | CHAR | BOOLEAN | ID);
 
 subrotinedec:
 	kind = (CONSTRUCTOR | FUNCTION | METHOD) subroutinetype subroutinename LPAREN parameterList
@@ -53,7 +53,7 @@ returnStatement: RETURN expression? SEMICOLON;
 
 subroutinecall: (classObject)? subroutinename LPAREN expressionlist RPAREN;
 
-classObject: (classname | varname) DOT;
+classObject: ID DOT;
 
 expressionlist: (expression (COMMA expression)*)?;
 
@@ -83,7 +83,7 @@ term:
 	| LPAREN expression RPAREN						# ParsTerm
 	| unaryop = (MINUS | NOT) term					# unaryopTerm;
 
-classname: CLASSNAME;
+classname: ID;
 varname: ID;
 subroutinename: ID;
 
@@ -135,8 +135,6 @@ ELSE: 'else';
 RETURN: 'return';
 FUNCTION: 'function';
 THIS: 'this';
-
-CLASSNAME: ([A-Z]) ([a-z] | [A-Z] | [0-9])*; // token adicionado, para facilitar o gerador de codigo
 
 ID: ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9])*;
 

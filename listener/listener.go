@@ -269,6 +269,7 @@ func (s *JackListener) EnterSubroutinecall(ctx *parser.SubroutinecallContext) {
 	s.numargs = 0
 	s.subroutineName = ""
 	if ctx.ClassObject() == nil { // é o metod da propria classe
+		s.subroutineName = s.className + "."
 		s.vm.WritePush(vmwriter.POINTER, 0)
 	}
 }
@@ -281,13 +282,14 @@ func (s *JackListener) ExitSubroutinecall(ctx *parser.SubroutinecallContext) {
 
 // EnterClassObject is called when production classObject is entered.
 func (s *JackListener) EnterClassObject(ctx *parser.ClassObjectContext) {
-	if ctx.Classname() == nil { // é um objeto
-		sym, _ := s.st.Lookup(ctx.Varname().GetText())
+	sym, has := s.st.Lookup(ctx.ID().GetText())
+	if has { // é um objeto
+
 		s.vm.WritePush(scopeToSegment(sym.Scope), sym.Index)
 		s.numargs = 1
 		s.subroutineName = sym.Type + "."
 	} else {
-		s.subroutineName = ctx.Classname().GetText() + "."
+		s.subroutineName = ctx.ID().GetText() + "."
 	}
 }
 
