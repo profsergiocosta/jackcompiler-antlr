@@ -122,6 +122,9 @@ func (s *JackListener) ExitLetStatement(ctx *parser.LetStatementContext) {
 	}
 
 }
+func (s *JackListener) ExitDoStatement(ctx *parser.DoStatementContext) {
+	s.vm.WritePop(vmwriter.TEMP, 0)
+}
 
 func (s *JackListener) ExitReturnStatement(ctx *parser.ReturnStatementContext) {
 	if ctx.GetChildCount() > 2 { // has expression ?
