@@ -2,9 +2,7 @@ package listener
 
 import (
 	"fmt"
-	"path"
 	"strconv"
-	"strings"
 
 	"github.com/profsergiocosta/jackcompiler-antlr/parser"
 	"github.com/profsergiocosta/jackcompiler-antlr/symboltable"
@@ -28,13 +26,12 @@ type JackListener struct {
 	subroutineName string
 }
 
-func New() *JackListener {
+func New(vmfilename string) *JackListener {
 
 	s := &JackListener{}
 	s.st = symboltable.NewSymbolTable()
 
-	pathName := "/home/sergio/go/src/github.com/profsergiocosta/jackcompiler-antlr/teste.jack"
-	s.vm = vmwriter.New(filenameWithoutExtension(pathName) + ".vm")
+	s.vm = vmwriter.New(vmfilename)
 
 	return s
 }
@@ -262,10 +259,6 @@ func (s *JackListener) ExitBinaryoperation(ctx *parser.BinaryoperationContext) {
 		s.vm.WriteArithmetic(vmwriter.NOT)
 	}
 
-}
-
-func filenameWithoutExtension(fn string) string {
-	return strings.TrimSuffix(fn, path.Ext(fn))
 }
 
 func asInt(s string) int {

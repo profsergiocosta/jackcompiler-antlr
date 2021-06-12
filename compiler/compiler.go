@@ -2,6 +2,9 @@ package compiler
 
 import (
 	"fmt"
+	"io/ioutil"
+	"path"
+	"strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
@@ -10,10 +13,21 @@ import (
 	"github.com/profsergiocosta/jackcompiler-antlr/listener"
 )
 
-func compile(s string) {
+func filenameWithoutExtension(fn string) string {
+	return strings.TrimSuffix(fn, path.Ext(fn))
+}
+
+//s.vm = vmwriter.New(filenameWithoutExtension(pathName) + ".vm")
+
+func Compile(pathName string) {
+
+	input, err := ioutil.ReadFile(pathName)
+	if err != nil {
+		panic("error in opening file")
+	}
 
 	// Setup the input
-	is := antlr.NewInputStream(s)
+	is := antlr.NewInputStream(string(input))
 
 	// Create the Lexer
 	lexer := parser.NewJackLexer(is)
@@ -26,8 +40,9 @@ func compile(s string) {
 	// generate AST
 	tree := p.Classdef()
 
+	vmfilename := filenameWithoutExtension(pathName) + ".vm"
 	// visit tree
-	antlr.ParseTreeWalkerDefault.Walk(listener.New(), tree)
+	antlr.ParseTreeWalkerDefault.Walk(listener.New(vmfilename), tree)
 
 	fmt.Println("compiled")
 
