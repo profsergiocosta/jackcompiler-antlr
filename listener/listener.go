@@ -24,6 +24,9 @@ type JackListener struct {
 	ifLabelNum    int
 	whileLabelNum int
 
+	whileLabelStack []int
+	ifLabelStack    []int
+
 	// call
 	subroutineKind int
 	numargs        int
@@ -148,7 +151,8 @@ func (s *JackListener) ExitReturnStatement(ctx *parser.ReturnStatementContext) {
 }
 
 func (s *JackListener) ExitIfStatement(ctx *parser.IfStatementContext) {
-	s.ifLabelNum++
+	//s.ifLabelNum++
+	s.ifLabelStack = s.ifLabelStack[:len(s.ifLabelStack)-1]
 }
 
 // EnterIfBlock is called when production ifBlock is entered.
@@ -160,12 +164,18 @@ func (s *JackListener) EnterIfBlock(ctx *parser.IfBlockContext) {
 	s.vm.WriteGoto(labelFalse)
 	s.vm.WriteLabel(labelTrue)
 
+	s.ifLabelStack = append(s.ifLabelStack, s.ifLabelNum)
+	s.ifLabelNum++
+
 }
 
 // ExitIfBlock is called when production ifBlock is exited.
 func (s *JackListener) ExitIfBlock(ctx *parser.IfBlockContext) {
-	labelEnd := fmt.Sprintf("IF_END%d", s.ifLabelNum)
-	labelFalse := fmt.Sprintf("IF_FALSE%d", s.ifLabelNum)
+
+	labelNum := s.ifLabelStack[len(s.ifLabelStack)-1]
+
+	labelEnd := fmt.Sprintf("IF_END%d", labelNum)
+	labelFalse := fmt.Sprintf("IF_FALSE%d", labelNum)
 
 	if ctx.GetParent().GetChildCount() > 4 { // has else
 		s.vm.WriteGoto(labelEnd)
@@ -176,7 +186,8 @@ func (s *JackListener) ExitIfBlock(ctx *parser.IfBlockContext) {
 
 // ExitElseBlock is called when production elseBlock is exited.
 func (s *JackListener) ExitElseBlock(ctx *parser.ElseBlockContext) {
-	labelEnd := fmt.Sprintf("IF_END%d", s.ifLabelNum)
+	labelNum := s.ifLabelStack[len(s.ifLabelStack)-1]
+	labelEnd := fmt.Sprintf("IF_END%d", labelNum)
 	s.vm.WriteLabel(labelEnd)
 }
 
@@ -184,23 +195,29 @@ func (s *JackListener) ExitElseBlock(ctx *parser.ElseBlockContext) {
 func (s *JackListener) EnterWhileStatement(ctx *parser.WhileStatementContext) {
 	labelWhileExp := fmt.Sprintf("WHILE_EXP%d", s.whileLabelNum)
 	s.vm.WriteLabel(labelWhileExp)
+	s.whileLabelStack = append(s.whileLabelStack, s.whileLabelNum)
+	s.whileLabelNum++
 }
 
 func (s *JackListener) ExitWhileStatement(ctx *parser.WhileStatementContext) {
-	s.whileLabelNum++
+	//s.whileLabelNum++
+	// pop
+	s.whileLabelStack = s.whileLabelStack[:len(s.whileLabelStack)-1]
 }
 
 // EnterWhileBlock is called when production whileBlock is entered.
 func (s *JackListener) EnterWhileBlock(ctx *parser.WhileBlockContext) {
-	labelWhileEnd := fmt.Sprintf("WHILE_END%d", s.whileLabelNum)
+	labelNum := s.whileLabelStack[len(s.whileLabelStack)-1]
+	labelWhileEnd := fmt.Sprintf("WHILE_END%d", labelNum)
 	s.vm.WriteArithmetic(vmwriter.NOT)
 	s.vm.WriteIf(labelWhileEnd)
 }
 
 // ExitWhileBlock is called when production whileBlock is exited.
 func (s *JackListener) ExitWhileBlock(ctx *parser.WhileBlockContext) {
-	labelWhileExp := fmt.Sprintf("WHILE_EXP%d", s.whileLabelNum)
-	labelWhileEnd := fmt.Sprintf("WHILE_END%d", s.whileLabelNum)
+	labelNum := s.whileLabelStack[len(s.whileLabelStack)-1]
+	labelWhileExp := fmt.Sprintf("WHILE_EXP%d", labelNum)
+	labelWhileEnd := fmt.Sprintf("WHILE_END%d", labelNum)
 
 	s.vm.WriteGoto(labelWhileExp)
 	s.vm.WriteLabel(labelWhileEnd)

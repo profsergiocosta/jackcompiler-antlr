@@ -1,0 +1,19 @@
+class Main {
+
+    function void main () {
+
+        var int i, j;
+
+        if (i < 10 ) {
+            if (j < 10) {
+
+            }
+
+            if (j < 10) {
+                
+            }
+        }
+
+        return;
+    }
+}
