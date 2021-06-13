@@ -94,7 +94,6 @@ func (s *JackListener) ExitVardecs(ctx *parser.VardecsContext) {
 
 	switch s.subroutineKind {
 	case parser.JackLexerMETHOD:
-		s.st.Define("this", s.className, symboltable.ARG)
 		s.vm.WritePush(vmwriter.ARG, 0)
 		s.vm.WritePop(vmwriter.POINTER, 0)
 	case parser.JackLexerCONSTRUCTOR:
@@ -107,13 +106,17 @@ func (s *JackListener) ExitVardecs(ctx *parser.VardecsContext) {
 
 func (s *JackListener) EnterSubrotinedec(ctx *parser.SubrotinedecContext) {
 
+	s.st.StartSubroutine()
+
 	s.functionName = s.className + "." + ctx.Subroutinename().GetText()
 	s.subroutineKind = ctx.GetKind().GetTokenType()
+	if ctx.GetKind().GetTokenType() == parser.JackLexerMETHOD {
+		s.st.Define("this", s.className, symboltable.ARG)
+	}
 
 	s.ifLabelNum = 0
 	s.whileLabelNum = 0
 
-	s.st.StartSubroutine()
 }
 
 // ExitLvalue is called when production lvalue is exited.
