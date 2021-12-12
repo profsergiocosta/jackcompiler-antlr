@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/profsergiocosta/jackcompiler-antlr/compiler"
+	"jackcompiler-antlr/compiler"
 )
 
 func isDirectory(path string) bool {

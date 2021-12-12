@@ -7,9 +7,9 @@ import (
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 
-	"github.com/profsergiocosta/jackcompiler-antlr/parser"
+	"jackcompiler-antlr/parser"
 
-	"github.com/profsergiocosta/jackcompiler-antlr/listener"
+	"jackcompiler-antlr/listener"
 )
 
 func filenameWithoutExtension(fn string) string {

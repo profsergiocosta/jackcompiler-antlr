@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/profsergiocosta/jackcompiler-antlr/parser"
-	"github.com/profsergiocosta/jackcompiler-antlr/symboltable"
-	"github.com/profsergiocosta/jackcompiler-antlr/vmwriter"
+	"jackcompiler-antlr/parser"
+	"jackcompiler-antlr/symboltable"
+	"jackcompiler-antlr/vmwriter"
 )
 
 type JackListener struct {
