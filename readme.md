@@ -1,4 +1,9 @@
 
+# gopath
+export GOPATH=$HOME/dev/go
+
+
+
 # Download
 
 wget http://www.antlr.org/download/antlr-4.7-complete.jar
@@ -8,7 +13,7 @@ alias antlr='java -jar ~/Applications/antlr-4.7-complete.jar'
 
 # baixando o antlr para o go
 
-go get github.com/antlr/antlr4/runtime/Go/antlr
+go get github.com/antlr/antlr4/runtime/Go/antlr@4.7.2
 
 # Executando o antlr
 
@@ -69,6 +74,9 @@ func main() {
 }
 ```
 
+# Run
+
+go run . testes/Main.jack 
 
 # Referencias
 
